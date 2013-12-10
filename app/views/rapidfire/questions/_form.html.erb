@@ -1,6 +1,6 @@
 <h3>Question</h3>
 
-<%= form_for [@question_group, question] do |f| %>
+<%= form_for [@survey, question] do |f| %>
   <%- unless question.errors.empty? %>
     <ul>
       <%- question.errors.full_messages.each do |message| %>
