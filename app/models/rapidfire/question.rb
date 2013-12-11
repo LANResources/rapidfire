@@ -1,15 +1,19 @@
 module Rapidfire
   class Question < ActiveRecord::Base
-    belongs_to :survey, :inverse_of => :questions
+    belongs_to :survey, inverse_of: :questions
     has_many   :answers
+    has_many :follow_up_questions, class_name: "Question", foreign_key: "follow_up_for_id", dependent: :destroy
+    belongs_to :follow_up_for, class_name: "Question", foreign_key: "follow_up_for_id", touch: true
 
-    default_scope { order(:position) }
+    acts_as_list scope: :survey
 
-    validates :survey, :question_text, :presence => true
+    validates :survey, :question_text, presence: true
     serialize :validation_rules
 
+    scope :with_choices, -> { where(type: ['Checkbox', 'Radio', 'Select', 'MultiSelect'].map{|t| "Rapidfire::Questions::#{t}"}) }
+
     if Rails::VERSION::MAJOR == 3
-      attr_accessible :survey, :question_text, :validation_rules, :answer_options
+      attr_accessible :survey, :question_text, :validation_rules, :answer_options, :follow_up_for_id, :follow_up_for_condition, :allow_custom, :help_text
     end
 
     def self.inherited(child)

@@ -13,14 +13,14 @@ module Rapidfire
 
     def new
       @question = QuestionForm.new(survey: @survey)
-      authorize! @questions
+      authorize! @question.to_model
       respond_with(@question)
     end
 
     def create
       form_params = question_params.merge(survey: @survey)
       @question = QuestionForm.new(form_params)
-      authorize! @question
+      authorize! @question.to_model
       @question.save
 
       respond_with(@question, location: index_location)
@@ -28,14 +28,14 @@ module Rapidfire
 
     def edit
       @question = QuestionForm.new(question: @question)
-      authorize! @question
+      authorize! @question.to_model
       respond_with(@question)
     end
 
     def update
       form_params = question_params.merge(question: @question)
       @question = QuestionForm.new(form_params)
-      authorize! @question
+      authorize! @question.to_model
       @question.save
 
       respond_with(@question, location: index_location)

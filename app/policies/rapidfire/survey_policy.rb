@@ -29,7 +29,7 @@ module Rapidfire
     end
 
     def permitted_attributes
-      [:name]
+      [:name, :active, :position]
     end
   end
 end

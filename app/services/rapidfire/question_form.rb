@@ -8,6 +8,7 @@ module Rapidfire
        Rapidfire::Questions::Numeric,
        Rapidfire::Questions::Radio,
        Rapidfire::Questions::Select,
+       Rapidfire::Questions::MultiSelect,
        Rapidfire::Questions::Short,
       ]
 
@@ -17,9 +18,9 @@ module Rapidfire
       result
     end
 
-    attr_accessor :survey, :question,
-      :type, :question_text, :answer_options, :answer_presence,
-      :answer_minimum_length, :answer_maximum_length,
+    attr_accessor :survey, :question, :type, :question_text, :answer_options,
+      :help_text, :allow_custom, :follow_up_for_id, :follow_up_for_condition,
+      :answer_presence, :answer_minimum_length, :answer_maximum_length,
       :answer_greater_than_or_equal_to, :answer_less_than_or_equal_to
 
     delegate :valid?, :errors, :id, :to => :question
@@ -60,6 +61,10 @@ module Rapidfire
         :survey => survey,
         :question_text  => question_text,
         :answer_options => answer_options,
+        :help_text => help_text,
+        :allow_custom => allow_custom,
+        :follow_up_for_id => follow_up_for_id,
+        :follow_up_for_condition => follow_up_for_condition,
         :validation_rules => {
           :presence => answer_presence,
           :minimum  => answer_minimum_length,
@@ -75,6 +80,10 @@ module Rapidfire
       self.survey  = question.survey
       self.question_text   = question.question_text
       self.answer_options  = question.answer_options
+      self.help_text  = question.help_text
+      self.allow_custom  = question.allow_custom
+      self.follow_up_for_id  = question.follow_up_for_id
+      self.follow_up_for_condition  = question.follow_up_for_condition
       self.answer_presence = question.rules[:presence]
       self.answer_minimum_length = question.rules[:minimum]
       self.answer_maximum_length = question.rules[:maximum]

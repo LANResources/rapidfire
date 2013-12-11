@@ -1,9 +1,17 @@
-%h3= survey.new_record? ? "New Survey" : "Edit Survey"
 = form_for survey do |f|
-  - if survey.errors.any?
-    %ul
-      - survey.errors.full_messages.each do |message|
-        %li= message
-  = f.label :name
-  = f.text_field :name
-  = f.submit
+  = render partial: 'shared/form_errors', locals: { resource: survey }
+
+  %fieldset
+    .form-group
+      = f.label :name, class: 'control-label col-sm-2'
+      .col-sm-10
+        = f.text_field :name, class: 'form-control'
+
+    .form-group
+      = f.label :active, 'Active?', class: 'control-label col-sm-2'
+      .col-sm-10
+        = f.check_box :active, { class: 'form-control' }
+
+    .form-group
+      .col-sm-offset-2.col-sm-10
+        = f.submit class: 'btn btn-primary'

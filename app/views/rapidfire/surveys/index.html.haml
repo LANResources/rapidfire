@@ -1,14 +1,16 @@
-%h2
-  Surveys
-  - if policy(Rapidfire::Survey).create?
-    = link_to "New Survey", new_survey_path
-%hr/
-%table
-  %colgroup
-    %col/
-    %col{width: "250"}/
-  %thead
-    %tr
-      %th Survey
-      %th
-  %tbody= render partial: "survey", collection: @surveys
+.row
+  .col-md-12
+    %table.table
+      %thead
+        %tr
+          %th Survey
+          %th
+      %tbody
+        = render partial: "survey", collection: @surveys
+
+- if policy(Rapidfire::Survey).create?
+  .row
+    .col-md-12
+      = link_to new_survey_path, class: 'btn btn-primary' do
+        %i.fa.fa-plus
+        = "&nbsp;New Survey".html_safe

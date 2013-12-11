@@ -7,6 +7,10 @@ class CreateRapidfireQuestions < ActiveRecord::Migration
       t.integer :position
       t.text :answer_options
       t.text :validation_rules
+      t.integer :follow_up_for_id
+      t.text :follow_up_for_condition
+      t.boolean :allow_custom, default: false
+      t.string :help_text
 
       t.timestamps
     end

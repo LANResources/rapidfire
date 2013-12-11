@@ -1,7 +1,25 @@
-%h2 Please answer these Questions
-%hr/
-= form_for [@survey, @attempt_builder] do |f|
-  - @attempt_builder.answers.each do |answer|
-    = f.fields_for("#{answer.question.id}", answer) do |answer_form|
-      = render_answer_form_helper(answer, answer_form)
-  = f.submit "Save"
+- title "Survey Attempt"
+
+.row
+  .col-md-12
+    .box
+      .box-header
+        %h2
+          %i.fa.fa-paperclip
+          = @survey.name
+      .box-content
+        .row
+          .col-md-12
+            = form_for [@survey, @attempt_builder] do |f|
+              %ol
+                - @attempt_builder.answers.each do |answer|
+                  = f.fields_for("#{answer.question.id}", answer) do |answer_form|
+                    %li
+                      = render partial: "rapidfire/answers/errors", locals: {answer: answer}
+                      .form-group
+                        = f.label :answer_text, answer.question.question_text
+                        = render_answer_form_helper(answer, answer_form)
+
+              .form-group
+                .pull-right
+                  = f.submit "Save", class: 'btn btn-primary'
