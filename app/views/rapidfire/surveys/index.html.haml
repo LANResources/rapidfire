@@ -1,6 +1,6 @@
 %h2
   Surveys
-  - if can_administer?
+  - if policy(Rapidfire::Survey).create?
     = link_to "New Survey", new_survey_path
 %hr/
 %table

@@ -22,7 +22,13 @@ module Rapidfire
     end
 
     def attempt_params
-      attempt_params = { params: params[:attempt] }
+      permitted_params =  if Rails::VERSION::MAJOR == 4
+                            params.require(:attempt).permit *policy(@attempt_builder || Rapidfire::Attempt).permitted_attributes
+                          else
+                            params[:attempt]
+                          end
+
+      attempt_params = { params: permitted_params }
       attempt_params.merge(user: current_user, survey: @survey)
     end
   end

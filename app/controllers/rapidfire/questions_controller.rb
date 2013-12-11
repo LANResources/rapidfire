@@ -1,6 +1,5 @@
 module Rapidfire
   class QuestionsController < Rapidfire::ApplicationController
-    before_filter :authenticate_administrator!
     respond_to :html, :js
 
     before_filter :find_survey!
@@ -8,17 +7,20 @@ module Rapidfire
 
     def index
       @questions = @survey.questions
+      authorize! @questions
       respond_with(@questions)
     end
 
     def new
       @question = QuestionForm.new(survey: @survey)
+      authorize! @questions
       respond_with(@question)
     end
 
     def create
-      form_params = params[:question].merge(survey: @survey)
+      form_params = question_params.merge(survey: @survey)
       @question = QuestionForm.new(form_params)
+      authorize! @question
       @question.save
 
       respond_with(@question, location: index_location)
@@ -26,12 +28,14 @@ module Rapidfire
 
     def edit
       @question = QuestionForm.new(question: @question)
+      authorize! @question
       respond_with(@question)
     end
 
     def update
-      form_params = params[:question].merge(question: @question)
+      form_params = question_params.merge(question: @question)
       @question = QuestionForm.new(form_params)
+      authorize! @question
       @question.save
 
       respond_with(@question, location: index_location)
@@ -39,6 +43,7 @@ module Rapidfire
 
     def destroy
       @question.destroy
+      authorize! @question
       respond_with(@question, location: index_location)
     end
 
@@ -53,6 +58,14 @@ module Rapidfire
 
     def index_location
       rapidfire.survey_questions_url(@survey)
+    end
+
+    def question_params
+      if Rails::VERSION::MAJOR == 4
+        params.require(:question).permit *policy(@question || Rapidfire::Question).permitted_attributes
+      else
+        params[:question]
+      end
     end
   end
 end

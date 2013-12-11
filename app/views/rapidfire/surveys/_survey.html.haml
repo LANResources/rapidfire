@@ -1,12 +1,12 @@
 %tr{id: "survey_#{survey.id}"}
   %td
-    - if can_administer?
+    - if policy(survey).create?
       = link_to survey.name, survey_questions_path(survey)
     - else
       = survey.name
   %td
     %ul.horizontal-list
       %li= link_to "Answer Questions", new_survey_attempt_path(survey)
-      - if can_administer?
+      - if policy(survey).create?
         %li= link_to "Results", [:results, survey]
         %li= link_to "Delete", [survey], method: :delete
