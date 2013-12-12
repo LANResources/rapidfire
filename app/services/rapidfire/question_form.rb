@@ -10,6 +10,7 @@ module Rapidfire
        Rapidfire::Questions::Select,
        Rapidfire::Questions::MultiSelect,
        Rapidfire::Questions::Short,
+       Rapidfire::Questions::UserMultiSelect
       ]
 
     QUESTION_TYPES = AVAILABLE_QUESTIONS.inject({}) do |result, question|
@@ -21,7 +22,7 @@ module Rapidfire
     attr_accessor :survey, :question, :type, :question_text, :answer_options,
       :help_text, :allow_custom, :follow_up_for_id, :follow_up_for_condition,
       :answer_presence, :answer_minimum_length, :answer_maximum_length,
-      :answer_greater_than_or_equal_to, :answer_less_than_or_equal_to
+      :answer_greater_than_or_equal_to, :answer_less_than_or_equal_to, :section
 
     delegate :valid?, :errors, :id, :to => :question
 
@@ -59,6 +60,7 @@ module Rapidfire
     def to_question_params
       {
         :survey => survey,
+        :section  => section,
         :question_text  => question_text,
         :answer_options => answer_options,
         :help_text => help_text,
@@ -78,6 +80,7 @@ module Rapidfire
     def from_question_to_attributes(question)
       self.type = question.type
       self.survey  = question.survey
+      self.section   = question.section
       self.question_text   = question.question_text
       self.answer_options  = question.answer_options
       self.help_text  = question.help_text

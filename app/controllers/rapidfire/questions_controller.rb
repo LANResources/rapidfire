@@ -11,6 +11,13 @@ module Rapidfire
       respond_with(@questions)
     end
 
+    def show
+      @question = Question.find(params[:id])
+      respond_to do |format|
+        format.json { render json: @question }
+      end
+    end
+
     def new
       @question = QuestionForm.new(survey: @survey)
       authorize! @question.to_model

@@ -20,7 +20,15 @@ module Rapidfire
       authorize! @survey
       @survey.save
 
-      respond_with(@survey, location: rapidfire.surveys_url)
+      respond_with(@survey, location: rapidfire.survey_questions_url(@survey))
+    end
+
+    def update
+      @survey = Survey.find(params[:id])
+      authorize! @survey
+      @survey.update_attributes survey_params
+
+      respond_with_bip @survey
     end
 
     def destroy

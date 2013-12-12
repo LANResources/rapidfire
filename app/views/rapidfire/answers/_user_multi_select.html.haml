@@ -1,0 +1,1 @@
+= f.select :answer_text, options_from_collection_for_select(answer.question.options, :id, :display_name), multiple: true, include_blank: true, { class: 'form-control chosen' }

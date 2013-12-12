@@ -5,7 +5,7 @@ module Rapidfire
     has_many :follow_up_questions, class_name: "Question", foreign_key: "follow_up_for_id", dependent: :destroy
     belongs_to :follow_up_for, class_name: "Question", foreign_key: "follow_up_for_id", touch: true
 
-    acts_as_list scope: :survey
+    acts_as_list scope: [:survey_id, :section]
 
     validates :survey, :question_text, presence: true
     serialize :validation_rules
@@ -13,7 +13,7 @@ module Rapidfire
     scope :with_choices, -> { where(type: ['Checkbox', 'Radio', 'Select', 'MultiSelect'].map{|t| "Rapidfire::Questions::#{t}"}) }
 
     if Rails::VERSION::MAJOR == 3
-      attr_accessible :survey, :question_text, :validation_rules, :answer_options, :follow_up_for_id, :follow_up_for_condition, :allow_custom, :help_text
+      attr_accessible :survey, :question_text, :validation_rules, :answer_options, :follow_up_for_id, :follow_up_for_condition, :allow_custom, :help_text, :section
     end
 
     def self.inherited(child)
@@ -23,6 +23,20 @@ module Rapidfire
         end
       end
 
+      child.class_eval do
+        after_save :set_follow_up_position
+
+        def set_follow_up_position
+          if follow_up_for_id.present?
+            if follow_up_for.follow_up_questions.where.not(id: self.id).any?
+              pos = follow_up_for.follow_up_questions.where.not(id: self.id).last.position + 1
+            else
+              pos = follow_up_for.position + 1
+            end
+            self.insert_at pos
+          end
+        end
+      end
       super
     end
 

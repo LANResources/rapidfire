@@ -29,7 +29,7 @@ module Rapidfire
     end
 
     def permitted_attributes
-      [:type, :question_text, :position, :answer_options, :validation_rules, :follow_up_for_id, :follow_up_for_condition, :help_text, :allow_custom]
+      [:type, :question_text, :position, :answer_options, :validation_rules, :follow_up_for_id, :follow_up_for_condition, :help_text, :allow_custom, :section]
     end
   end
 end
