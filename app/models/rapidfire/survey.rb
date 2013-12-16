@@ -7,6 +7,8 @@ module Rapidfire
 
     validates :name, :presence => true
 
+    scope :active, -> { where(active: true) }
+    
     if Rails::VERSION::MAJOR == 3
       attr_accessible :name
     end

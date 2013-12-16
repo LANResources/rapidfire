@@ -6,5 +6,6 @@ Rapidfire::Engine.routes.draw do
     resources :attempts, only: [:new, :create]
   end
 
+  resources :activities, controller: 'attempts'
   root :to => "surveys#index"
 end
