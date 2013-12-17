@@ -39,13 +39,6 @@ module Rapidfire
       respond_with(@survey)
     end
 
-    def results
-      @survey = Survey.find(params[:id])
-      @survey_results = SurveyResults.new(survey: @survey).extract
-
-      respond_with(@survey_results, root: false)
-    end
-
     private
     def survey_params
       if Rails::VERSION::MAJOR == 4

@@ -2,9 +2,9 @@ module Rapidfire
   class AttemptsController < Rapidfire::ApplicationController
     before_filter :find_survey!, only: [:new, :create]
     before_filter :find_attempt!, only: [:show, :edit, :update, :destroy]
+    before_filter :scope_attempts, only: :index
 
     def index
-      @attempts = Attempt.includes(:user).order("#{sort_column} #{sort_direction}").page(params[:page]).per_page(20)
     end
 
     def new
@@ -15,7 +15,7 @@ module Rapidfire
       @attempt_builder = AttemptBuilder.new(attempt_params)
 
       if @attempt_builder.save
-        redirect_to surveys_path
+        redirect_to activities_path(user_id: current_user.id)
       else
         render :new
       end
@@ -47,14 +47,31 @@ module Rapidfire
     end
 
     def attempt_params
-      { 
+      {
         params: params[:attempt],
-        user: current_user, 
-        survey: @survey, 
-        description: params[:description], 
-        completed_for: params[:completed_for], 
+        user: current_user,
+        survey: @survey,
+        description: params[:description],
+        completed_for: params[:completed_for],
         activity_date: params[:activity_date]
       }
+    end
+
+    def scope_attempts
+      @scopes = {}
+      @scope_params = {}
+      @attempts = Attempt.includes(:user)
+      if params[:for]
+        @scopes[:for] = "for #{params[:for]}"
+        @scope_params[:for] = params[:for]
+        @attempts = @attempts.where "'#{params[:for]}' = ANY (completed_for)"
+      end
+      if params[:user] and User.exists?(params[:user])
+        @scopes[:user] = "by #{User.find(params[:user]).full_name}"
+        @scope_params[:user] = params[:user]
+        @attempts = @attempts.where user_id: params[:user]
+      end
+      @attempts = @attempts.order("#{sort_column} #{sort_direction}").page(params[:page]).per_page(20)
     end
 
     def sort_column

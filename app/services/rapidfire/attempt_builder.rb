@@ -20,6 +20,9 @@ module Rapidfire
         end
       end
 
+      # Remove unanswered questions
+      @attempt.answers = @attempt.answers.reject{|a| a.question.rules[:presence] != '1' && a.answer_text.blank? }
+
       @attempt.save!(options)
     end
 
@@ -35,12 +38,12 @@ module Rapidfire
 
     private
     def build_attempt
-      @attempt = Attempt.new  user: user, 
-                              survey: survey, 
+      @attempt = Attempt.new  user: user,
+                              survey: survey,
                               description: description,
                               activity_date: activity_date,
                               completed_for: completed_for
-                              
+
       @answers = @survey.questions.collect do |question|
         @attempt.answers.build(question_id: question.id)
       end
