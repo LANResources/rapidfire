@@ -4,7 +4,7 @@ module Rapidfire
     before_filter :find_attempt!, only: [:show, :edit, :update, :destroy]
 
     def index
-      @attempts = Attempt.where(user_id: current_user.id)
+      @attempts = Attempt.includes(:user).order("#{sort_column} #{sort_direction}").page(params[:page]).per_page(20)
     end
 
     def new
@@ -12,9 +12,7 @@ module Rapidfire
     end
 
     def create
-      p = attempt_params
-      Rails.logger.info p
-      @attempt_builder = AttemptBuilder.new(p)
+      @attempt_builder = AttemptBuilder.new(attempt_params)
 
       if @attempt_builder.save
         redirect_to surveys_path
@@ -57,6 +55,10 @@ module Rapidfire
         completed_for: params[:completed_for], 
         activity_date: params[:activity_date]
       }
+    end
+
+    def sort_column
+      super(Attempt.column_names + ['users.last_name'], 'updated_at')
     end
   end
 end
