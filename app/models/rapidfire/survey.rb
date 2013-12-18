@@ -1,6 +1,6 @@
 module Rapidfire
   class Survey < ActiveRecord::Base
-    has_many  :questions, -> { order('position ASC') }, dependent: :destroy
+    has_many  :questions, -> { order('section ASC, position ASC') }, dependent: :destroy
     has_many  :attempts, dependent: :destroy
 
     acts_as_list
@@ -8,7 +8,8 @@ module Rapidfire
     validates :name, :presence => true
 
     scope :active, -> { where(active: true) }
-    
+
+    SECTION_ORDERING = ['Impact', ]
     if Rails::VERSION::MAJOR == 3
       attr_accessible :name
     end

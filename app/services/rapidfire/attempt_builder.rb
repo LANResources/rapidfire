@@ -31,7 +31,7 @@ module Rapidfire
     rescue Exception => e
       # repopulate answers here in case of failure as they are not getting updated
       @answers = @survey.questions.collect do |question|
-        @attempt.answers.find { |a| a.question_id == question.id }
+        @attempt.answers.find { |a| a.question_id == question.id } || @attempt.answers.build(question_id: question.id)
       end
       false
     end
