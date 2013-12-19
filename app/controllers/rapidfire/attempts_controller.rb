@@ -15,7 +15,7 @@ module Rapidfire
       @attempt_builder = AttemptBuilder.new(attempt_params)
 
       if @attempt_builder.save
-        redirect_to activities_path(user_id: current_user.id)
+        redirect_to activity_path(@attempt_builder.attempt)
       else
         render :new
       end
@@ -25,9 +25,19 @@ module Rapidfire
     end
 
     def edit
+      @survey = @attempt.survey
+      @attempt_builder = AttemptBuilder.build @attempt
     end
 
     def update
+      @survey = @attempt.survey
+      @attempt_builder = AttemptBuilder.build_for_update @attempt, attempt_params
+
+      if @attempt_builder.save
+        redirect_to activity_path(@attempt)
+      else
+        render :edit
+      end
     end
 
     def destroy

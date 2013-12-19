@@ -1,10 +1,35 @@
 module Rapidfire
   class AttemptBuilder < Rapidfire::BaseService
-    attr_accessor :user, :survey, :questions, :answers, :params, :description, :activity_date, :completed_for
+    attr_accessor :user, :survey, :questions, :answers, :params, :description, :activity_date, :completed_for, :attempt
 
     def initialize(params = {})
       super(params)
       build_attempt
+    end
+
+    def self.build(attempt)
+      params = {
+        params: {},
+        user: attempt.user,
+        survey: attempt.survey,
+        description: attempt.description,
+        completed_for: attempt.completed_for,
+        activity_date: attempt.activity_date
+      }
+      a = new params
+      a.attempt = attempt
+      a.rebuild_answers
+      a
+    end
+
+    def self.build_for_update(attempt, params = {})
+      a = new params
+      a.attempt = attempt
+      a.user = attempt.user
+      a.attempt.description = params[:description] if params[:description]
+      a.attempt.completed_for = params[:completed_for] if params[:completed_for]
+      a.attempt.activity_date = params[:activity_date] if params[:activity_date]
+      a
     end
 
     def to_model
@@ -30,10 +55,14 @@ module Rapidfire
       save!(options)
     rescue Exception => e
       # repopulate answers here in case of failure as they are not getting updated
+      rebuild_answers
+      false
+    end
+
+    def rebuild_answers
       @answers = @survey.questions.collect do |question|
         @attempt.answers.find { |a| a.question_id == question.id } || @attempt.answers.build(question_id: question.id)
       end
-      false
     end
 
     private
@@ -48,6 +77,7 @@ module Rapidfire
         @attempt.answers.build(question_id: question.id)
       end
     end
+
 
     def strip_checkbox_answers(text)
       text.reject(&:blank?).reject { |t| t == "0" }
