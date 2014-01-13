@@ -1,6 +1,10 @@
 module Rapidfire
   module Questions
     class UserMultiSelect < Rapidfire::Question
+      def grouped_options
+        Organization.order(:name)
+      end
+
       def options
         User.all
       end

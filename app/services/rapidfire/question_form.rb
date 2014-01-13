@@ -62,6 +62,7 @@ module Rapidfire
       {
         :survey => survey,
         :section  => section,
+        :type => type,
         :question_text  => question_text,
         :answer_options => answer_options,
         :help_text => help_text,
