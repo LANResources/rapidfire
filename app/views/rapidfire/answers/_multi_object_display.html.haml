@@ -1,0 +1,14 @@
+- answer.answer_text.split(';').each_with_index do |obj, i|
+  - primary, *others = obj.split(',')
+  - if primary.split('=').length == 2
+    - unless i == 0
+      %br/
+      %br/
+    %strong= primary.split('=').last
+    - others.each do |other|
+      %br/
+      %i.fa.fa-angle-right
+      %small
+        %i
+          = p_space "#{other.split('=').first.titleize}:"
+          = p_space other.split('=').at(1)

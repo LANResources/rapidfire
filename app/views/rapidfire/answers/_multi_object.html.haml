@@ -1,0 +1,39 @@
+= f.hidden_field :answer_text, class: 'objects-input'
+- obj_name = answer.question.question_text.split('=').first
+%ul.list-unstyled.objects-container
+  - if answer.answer_text
+    - answer.answer_text.split(';').each_with_index do |obj, i|
+      %li
+        .bs-callout.bs-callout-info
+          %h4= obj_name
+          - answer.question.options.each do |option|
+            - prop, label = option.split('=')
+            .row.form-group
+              %dl.dl-horizontal
+                %dt
+                  %label{for: "##{obj_name}-#{i}-#{prop.parameterize}"}= label
+                %dd
+                  = text_field_tag "#{obj_name}-#{i}-#{prop.parameterize}", obj.match(Regexp.new("#{prop}=([^,]+)")).try(:[], 1), class: 'form-control', data: {property: prop}
+
+          .text-right
+            %a.remove-object-btn.btn-link remove
+
+%a.add-object-btn.btn-link{data: {template: "#{obj_name}-template"}}
+  %i.fa.fa-plus
+  = p_space "Add #{obj_name}"
+
+%script{type: 'text/template', id: "#{obj_name}-template"}
+  %li
+    .bs-callout.bs-callout-info
+      %h4= obj_name
+      - answer.question.options.each do |option|
+        - prop, label = option.split('=')
+        .row.form-group
+          %dl.dl-horizontal
+            %dt
+              %label{for: "##{obj_name}-{{index}}-#{prop.parameterize}"}= label
+            %dd
+              %input.form-control{type: 'text', id: "#{obj_name}-{{index}}-#{prop.parameterize}", name: "#{obj_name}-{{index}}-#{prop.parameterize}", data: { property: prop }}
+
+      .text-right
+        %a.remove-object-btn.btn-link remove

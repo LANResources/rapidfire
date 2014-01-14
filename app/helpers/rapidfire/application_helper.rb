@@ -19,11 +19,21 @@ module Rapidfire
         User.where(id: answer.answer_text.split(',')).map do |user|
           link_to user.full_name, user, class: 'btn-link'
         end.join('<br/>')
+      when 'MultiObject'
+        render partial: "rapidfire/answers/multi_object_display", locals: { answer: answer }
       when 'Checkbox'
         answer.answer_text.sub ',', '<br/>'
       else
         answer.answer_text
       end.html_safe
+    end
+
+    def display_question_text(question)
+      if question.multi_object?
+        question.question_text.split('=').last.html_safe
+      else
+        question.question_text.html_safe
+      end
     end
 
     def method_missing(method, *args, &block)

@@ -30,6 +30,7 @@ module Rapidfire
       [:description, :completed_for, :activity_date, :activity_type].each do |attribute|
         a.attempt[attribute] = params[attribute] if params[attribute]
       end
+      a.rebuild_answers
       a
     end
 
@@ -41,8 +42,7 @@ module Rapidfire
       params.each do |question_id, answer_attributes|
         if answer = @attempt.answers.find { |a| a.question_id.to_s == question_id.to_s }
           text = answer_attributes[:answer_text]
-          answer.answer_text =
-            text.is_a?(Array) ? strip_checkbox_answers(text).join(',') : text
+          answer.answer_text = text.is_a?(Array) ? strip_checkbox_answers(text).join(',') : text
         end
       end
 

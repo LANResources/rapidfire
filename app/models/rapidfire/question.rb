@@ -10,10 +10,15 @@ module Rapidfire
     validates :survey, :question_text, presence: true
     serialize :validation_rules
 
-    scope :with_choices, -> { where(type: ['Checkbox', 'Radio', 'Select', 'MultiSelect'].map{|t| "Rapidfire::Questions::#{t}"}) }
+    scope :with_choices, -> { where(type: ['Checkbox', 'Radio', 'Select', 'MultiSelect', 'MultiObject'].map{|t| "Rapidfire::Questions::#{t}"}) }
+    scope :multi, -> { where(type: ['MultiObject'].map{|t| "Rapidfire::Questions::#{t}"}) }
 
     if Rails::VERSION::MAJOR == 3
       attr_accessible :survey, :question_text, :validation_rules, :answer_options, :follow_up_for_id, :follow_up_for_condition, :allow_custom, :help_text, :section
+    end
+
+    def multi_object?
+      false
     end
 
     def self.inherited(child)

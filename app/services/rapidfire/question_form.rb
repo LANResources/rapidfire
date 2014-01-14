@@ -11,7 +11,8 @@ module Rapidfire
        Rapidfire::Questions::MultiSelect,
        Rapidfire::Questions::Short,
        Rapidfire::Questions::UserMultiSelect,
-       Rapidfire::Questions::SectorCheckbox
+       Rapidfire::Questions::SectorCheckbox,
+       Rapidfire::Questions::MultiObject
       ]
 
     QUESTION_TYPES = AVAILABLE_QUESTIONS.inject({}) do |result, question|
