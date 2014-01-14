@@ -41,6 +41,9 @@ module Rapidfire
     end
 
     def destroy
+      authorize! @attempt
+      @attempt.destroy
+      redirect_to activities_path
     end
 
     private

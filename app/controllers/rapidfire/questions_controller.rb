@@ -49,8 +49,8 @@ module Rapidfire
     end
 
     def destroy
-      @question.destroy
       authorize! @question
+      @question.destroy
       respond_with(@question, location: index_location)
     end
 
