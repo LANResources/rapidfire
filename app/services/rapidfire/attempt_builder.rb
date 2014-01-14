@@ -1,6 +1,6 @@
 module Rapidfire
   class AttemptBuilder < Rapidfire::BaseService
-    attr_accessor :user, :survey, :questions, :answers, :params, :description, :activity_date, :completed_for, :attempt
+    attr_accessor :user, :survey, :questions, :answers, :params, :description, :activity_date, :activity_type, :completed_for, :attempt
 
     def initialize(params = {})
       super(params)
@@ -14,7 +14,8 @@ module Rapidfire
         survey: attempt.survey,
         description: attempt.description,
         completed_for: attempt.completed_for,
-        activity_date: attempt.activity_date
+        activity_date: attempt.activity_date,
+        activity_type: attempt.activity_type
       }
       a = new params
       a.attempt = attempt
@@ -26,9 +27,9 @@ module Rapidfire
       a = new params
       a.attempt = attempt
       a.user = attempt.user
-      a.attempt.description = params[:description] if params[:description]
-      a.attempt.completed_for = params[:completed_for] if params[:completed_for]
-      a.attempt.activity_date = params[:activity_date] if params[:activity_date]
+      [:description, :completed_for, :activity_date, :activity_type].each do |attribute|
+        a.attempt[attribute] = params[attribute] if params[attribute]
+      end
       a
     end
 
@@ -71,6 +72,7 @@ module Rapidfire
                               survey: survey,
                               description: description,
                               activity_date: activity_date,
+                              activity_type: activity_type,
                               completed_for: completed_for
 
       @answers = @survey.questions.collect do |question|

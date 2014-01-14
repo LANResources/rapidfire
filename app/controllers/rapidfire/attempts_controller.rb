@@ -63,7 +63,8 @@ module Rapidfire
         survey: @survey,
         description: params[:description],
         completed_for: params[:completed_for],
-        activity_date: params[:activity_date]
+        activity_date: params[:activity_date],
+        activity_type: params[:activity_type]
       }
     end
 
