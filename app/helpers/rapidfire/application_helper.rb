@@ -6,23 +6,23 @@ module Rapidfire
     end
 
     def checkbox_checked?(answer, option)
-      answer.answer_text.to_s.split(",").include?(option)
+      answer.answer_text.to_s.split(",,,").include?(option)
     end
 
     def display_answer_text(answer)
       case answer.question.type.split('::').last
       when 'SectorCheckbox'
-        Sector.where(id: answer.answer_text.split(',').map(&:to_i)).map do |s|
+        Sector.where(id: answer.answer_text.split(',,,').map(&:to_i)).map do |s|
           s.name
         end.join('<br/>')
       when 'UserMultiSelect'
-        User.where(id: answer.answer_text.split(',')).map do |user|
+        User.where(id: answer.answer_text.split(',,,')).map do |user|
           link_to user.full_name, user, class: 'btn-link'
         end.join('<br/>')
       when 'MultiObject'
         render partial: "rapidfire/answers/multi_object_display", locals: { answer: answer }
       when 'Checkbox'
-        answer.answer_text.sub ',', '<br/>'
+        answer.answer_text.sub ',,,', '<br/>'
       else
         answer.answer_text
       end.html_safe
