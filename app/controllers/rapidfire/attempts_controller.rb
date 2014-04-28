@@ -85,11 +85,11 @@ module Rapidfire
         @scope_params[:user] = params[:user]
         @attempts = @attempts.where user_id: params[:user]
       end
-      @attempts = @attempts.order("#{sort_column} #{sort_direction}").page(params[:page]).per_page(20)
+      @attempts = @attempts.order("#{sort_column} #{sort_direction('desc')}").page(params[:page]).per_page(20)
     end
 
     def sort_column
-      super(Attempt.column_names + ['users.last_name'], 'updated_at')
+      super(Attempt.column_names + ['users.last_name'], 'activity_date')
     end
   end
 end
