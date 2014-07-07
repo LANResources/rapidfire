@@ -22,7 +22,7 @@ module Rapidfire
       when 'MultiObject'
         render partial: "rapidfire/answers/multi_object_display", locals: { answer: answer }
       when 'Checkbox'
-        answer.answer_text.sub ',,,', '<br/>'
+        answer.answer_text.gsub ',,,', '<br/>'
       else
         answer.answer_text
       end.html_safe

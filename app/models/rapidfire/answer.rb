@@ -1,7 +1,7 @@
 module Rapidfire
   class Answer < ActiveRecord::Base
     belongs_to :question
-    belongs_to :attempt, inverse_of: :answers
+    belongs_to :attempt, inverse_of: :answers, touch: true
 
     validates :question, :attempt, presence: true
     validate  :verify_answer_text, :if => "question.present?"
