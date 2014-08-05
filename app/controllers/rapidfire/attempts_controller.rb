@@ -47,6 +47,7 @@ module Rapidfire
     end
 
     private
+
     def find_survey!
       if params[:survey_id]
         @survey = Survey.find(params[:survey_id])
@@ -74,18 +75,7 @@ module Rapidfire
     def scope_attempts
       @scopes = {}
       @scope_params = {}
-      @attempts = Attempt.includes(:user)
-      if params[:for]
-        @scopes[:for] = "for #{params[:for]}"
-        @scope_params[:for] = params[:for]
-        @attempts = @attempts.where "'#{params[:for]}' = ANY (completed_for)"
-      end
-      if params[:user] and User.exists?(params[:user])
-        @scopes[:user] = "by #{User.find(params[:user]).full_name}"
-        @scope_params[:user] = params[:user]
-        @attempts = @attempts.where user_id: params[:user]
-      end
-      @attempts = @attempts.order("#{sort_column} #{sort_direction('desc')}").page(params[:page]).per_page(20)
+      @attempts = Attempt.includes(:user).order("#{sort_column} #{sort_direction('desc')}").page(params[:page]).per_page(20)
     end
 
     def sort_column

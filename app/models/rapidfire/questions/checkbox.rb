@@ -8,8 +8,6 @@ module Rapidfire
       end
 
       def validate_answer(answer)
-        puts answer.inspect
-        puts answer.answer_text.inspect
         super(answer)
 
         if rules[:presence] == "1" || answer.answer_text.present?
