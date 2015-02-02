@@ -23,7 +23,7 @@ module Rapidfire
 
     attr_accessor :survey, :question, :type, :question_text, :answer_options,
       :help_text, :allow_custom, :follow_up_for_id, :follow_up_for_condition,
-      :answer_presence, :answer_minimum_length, :answer_maximum_length,
+      :answer_presence, :answer_only_integer, :answer_minimum_length, :answer_maximum_length,
       :answer_greater_than_or_equal_to, :answer_less_than_or_equal_to, :section
 
     delegate :valid?, :errors, :id, :to => :question
@@ -72,6 +72,7 @@ module Rapidfire
         :follow_up_for_condition => follow_up_for_condition,
         :validation_rules => {
           :presence => answer_presence,
+          :only_integer => answer_only_integer,
           :minimum  => answer_minimum_length,
           :maximum  => answer_maximum_length,
           :greater_than_or_equal_to => answer_greater_than_or_equal_to,
@@ -91,6 +92,7 @@ module Rapidfire
       self.follow_up_for_id  = question.follow_up_for_id
       self.follow_up_for_condition  = question.follow_up_for_condition
       self.answer_presence = question.rules[:presence]
+      self.answer_only_integer = question.rules[:only_integer]
       self.answer_minimum_length = question.rules[:minimum]
       self.answer_maximum_length = question.rules[:maximum]
       self.answer_greater_than_or_equal_to = question.rules[:greater_than_or_equal_to]

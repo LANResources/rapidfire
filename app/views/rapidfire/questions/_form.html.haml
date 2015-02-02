@@ -27,6 +27,11 @@
         = f.check_box :answer_presence, class: 'form-control'
 
     .form-group
+      = f.label :answer_only_integer, 'Integer Only (if Numeric)', class: 'control-label col-sm-2'
+      .col-sm-6
+        = f.check_box :answer_only_integer, class: 'form-control'
+
+    .form-group
       = f.label :answer_minimum_length, class: 'control-label col-sm-2'
       .col-sm-6
         = f.text_field :answer_minimum_length, class: 'form-control'
